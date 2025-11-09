@@ -2168,7 +2168,6 @@ symbols! {
         slice_from_raw_parts_mut,
         slice_from_ref,
         slice_get_unchecked,
-        slice_into_vec,
         slice_iter,
         slice_len_fn,
         slice_patterns,
