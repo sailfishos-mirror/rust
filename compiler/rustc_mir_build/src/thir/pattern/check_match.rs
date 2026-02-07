@@ -344,7 +344,6 @@ impl<'p, 'tcx> MatchVisitor<'p, 'tcx> {
             | Binary { .. }
             | Block { .. }
             | Borrow { .. }
-            | Box { .. }
             | Call { .. }
             | ByUse { .. }
             | Closure { .. }
