@@ -1,0 +1,71 @@
+// MIR for `drop_bytes` after PreCodegen
+
+fn drop_bytes(_1: *mut Box<[u8; 1024]>) -> () {
+    debug x => _1;
+    let mut _0: ();
+    scope 1 (inlined drop_in_place::<Box<[u8; 1024]>> - shim(Some(Box<[u8; 1024]>))) {
+        scope 2 (inlined <Box<[u8; 1024]> as Drop>::drop) {
+            let _2: std::ptr::NonNull<[u8; 1024]>;
+            let _4: ();
+            scope 3 {
+                scope 4 {
+                    scope 12 (inlined Layout::size) {
+                    }
+                    scope 13 (inlined std::ptr::Unique::<[u8; 1024]>::cast::<u8>) {
+                        scope 14 (inlined NonNull::<[u8; 1024]>::cast::<u8>) {
+                            scope 15 (inlined NonNull::<[u8; 1024]>::as_ptr) {
+                            }
+                        }
+                    }
+                    scope 16 (inlined <NonNull<u8> as From<std::ptr::Unique<u8>>>::from) {
+                        scope 17 (inlined std::ptr::Unique::<u8>::as_non_null_ptr) {
+                        }
+                    }
+                    scope 18 (inlined <std::alloc::Global as Allocator>::deallocate) {
+                        scope 19 (inlined std::alloc::Global::deallocate_impl) {
+                            scope 20 (inlined std::alloc::Global::deallocate_impl_runtime) {
+                                let mut _3: *mut u8;
+                                scope 21 (inlined Layout::size) {
+                                }
+                                scope 22 (inlined NonNull::<u8>::as_ptr) {
+                                }
+                                scope 23 (inlined std::alloc::dealloc) {
+                                    scope 24 (inlined Layout::size) {
+                                    }
+                                    scope 25 (inlined Layout::alignment) {
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                scope 5 (inlined std::ptr::Unique::<[u8; 1024]>::as_ptr) {
+                    scope 6 (inlined NonNull::<[u8; 1024]>::as_ptr) {
+                    }
+                }
+                scope 7 (inlined Layout::for_value_raw::<[u8; 1024]>) {
+                    scope 8 {
+                        scope 11 (inlined #[track_caller] Layout::from_size_alignment_unchecked) {
+                        }
+                    }
+                    scope 9 (inlined size_of_val_raw::<[u8; 1024]>) {
+                    }
+                    scope 10 (inlined std::ptr::Alignment::of_val_raw::<[u8; 1024]>) {
+                    }
+                }
+            }
+        }
+    }
+
+    bb0: {
+        _2 = copy (((*_1).0: std::ptr::Unique<[u8; 1024]>).0: std::ptr::NonNull<[u8; 1024]>);
+        StorageLive(_3);
+        _3 = copy _2 as *mut u8 (Transmute);
+        _4 = alloc::alloc::__rust_dealloc(move _3, const 1024_usize, const std::ptr::Alignment {{ _inner_repr_trick: std::ptr::alignment::AlignmentEnum::_Align1Shl0 }}) -> [return: bb1, unwind unreachable];
+    }
+
+    bb1: {
+        StorageDead(_3);
+        return;
+    }
+}
