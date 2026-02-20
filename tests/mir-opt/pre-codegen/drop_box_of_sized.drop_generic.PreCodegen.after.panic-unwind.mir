@@ -6,11 +6,11 @@ fn drop_generic(_1: *mut Box<T>) -> () {
     scope 1 (inlined drop_in_place::<Box<T>> - shim(Some(Box<T>))) {
         scope 2 (inlined <Box<T> as Drop>::drop) {
             let _2: std::ptr::NonNull<T>;
-            let mut _3: *const T;
-            let mut _5: usize;
-            let _8: ();
+            let _7: ();
             scope 3 {
-                let _4: std::alloc::Layout;
+                let _3: std::alloc::Layout;
+                let _4: usize;
+                let _5: std::ptr::Alignment;
                 scope 4 {
                     scope 8 (inlined Layout::size) {
                     }
@@ -33,7 +33,6 @@ fn drop_generic(_1: *mut Box<T>) -> () {
                                 scope 18 (inlined NonNull::<u8>::as_ptr) {
                                 }
                                 scope 19 (inlined std::alloc::dealloc) {
-                                    let mut _7: std::ptr::Alignment;
                                     scope 20 (inlined Layout::size) {
                                     }
                                     scope 21 (inlined Layout::alignment) {
@@ -54,35 +53,25 @@ fn drop_generic(_1: *mut Box<T>) -> () {
     }
 
     bb0: {
-        StorageLive(_4);
         _2 = copy (((*_1).0: std::ptr::Unique<T>).0: std::ptr::NonNull<T>);
-        StorageLive(_3);
-        _3 = copy _2 as *const T (Transmute);
-        _4 = layout_of_val::<T>(move _3) -> [return: bb1, unwind unreachable];
+        _3 = const <T as std::mem::SizedTypeProperties>::LAYOUT;
+        _4 = move (_3.0: usize);
+        _5 = move (_3.1: std::ptr::Alignment);
+        switchInt(copy _4) -> [0: bb3, otherwise: bb1];
     }
 
     bb1: {
-        StorageDead(_3);
-        _5 = copy (_4.0: usize);
-        switchInt(copy _5) -> [0: bb4, otherwise: bb2];
+        StorageLive(_6);
+        _6 = copy _2 as *mut u8 (Transmute);
+        _7 = alloc::alloc::__rust_dealloc(move _6, move _4, move _5) -> [return: bb2, unwind unreachable];
     }
 
     bb2: {
-        StorageLive(_6);
-        _6 = copy _2 as *mut u8 (Transmute);
-        StorageLive(_7);
-        _7 = copy (_4.1: std::ptr::Alignment);
-        _8 = alloc::alloc::__rust_dealloc(move _6, move _5, move _7) -> [return: bb3, unwind unreachable];
+        StorageDead(_6);
+        goto -> bb3;
     }
 
     bb3: {
-        StorageDead(_7);
-        StorageDead(_6);
-        goto -> bb4;
-    }
-
-    bb4: {
-        StorageDead(_4);
         return;
     }
 }

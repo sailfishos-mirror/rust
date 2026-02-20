@@ -15,13 +15,8 @@ use std::intrinsics::layout_of_val;
 // CHECK-LABEL: @thin_metadata(
 #[no_mangle]
 pub unsafe fn thin_metadata(ptr: *const [u32; 2]) -> Layout {
-    // CHECK: [[LAYOUT:%.+]] = alloca [16 x i8], align 8
-    // CHECK-NOT: load
-    // CHECK-NOT: store
-    // CHECK: store i64 4, ptr [[LAYOUT]], align 8
-    // CHECK-NEXT: [[SIZEP:%.+]] = getelementptr inbounds i8, ptr [[LAYOUT]], i64 8
-    // CHECK-NEXT: store i64 8, ptr [[SIZEP]], align 8
-    // CHECK-NOT: store
+    // CHECK-NOT: alloca
+    // CHECK: ret { i64, i64 } { i64 4, i64 8 }
     layout_of_val(ptr)
 }
 

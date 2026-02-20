@@ -1223,6 +1223,7 @@ symbols! {
         mem_discriminant,
         mem_drop,
         mem_forget,
+        mem_layout_const,
         mem_size_const,
         mem_swap,
         mem_uninitialized,
