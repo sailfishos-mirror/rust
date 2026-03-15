@@ -8,7 +8,7 @@ use horde::sync_table::Write;
 use rustc_hash::FxBuildHasher;
 
 use crate::sharded::IntoPointer;
-use crate::sync::{DynSync, Lock, LockGuard};
+use crate::sync::{DynSync, Lock, LockGuard, Mode};
 
 pub struct SyncTable<K, V> {
     // We use this lock to protect `table` instead of the internal mutex in `horde::SyncTable`
@@ -120,9 +120,11 @@ impl<K: Eq + Hash + Copy + Send> SyncTable<K, ()> {
 
             let mut write = self.lock();
 
-            let entry = self.read(pin).get(value, Some(hash));
-            if let Some(entry) = entry {
-                return *entry.0;
+            if self.lock.mode() == Mode::Sync {
+                let entry = self.read(pin).get(value, Some(hash));
+                if let Some(entry) = entry {
+                    return *entry.0;
+                }
             }
 
             let result = make();
@@ -149,9 +151,11 @@ impl<K: Eq + Hash + Copy + Send> SyncTable<K, ()> {
 
             let mut write = self.lock();
 
-            let entry = self.read(pin).get(&value, Some(hash));
-            if let Some(entry) = entry {
-                return *entry.0;
+            if self.lock.mode() == Mode::Sync {
+                let entry = self.read(pin).get(&value, Some(hash));
+                if let Some(entry) = entry {
+                    return *entry.0;
+                }
             }
 
             let result = make(value);
