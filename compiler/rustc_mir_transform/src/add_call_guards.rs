@@ -86,7 +86,11 @@ impl<'tcx> crate::MirPass<'tcx> for AddCallGuards {
         let cur_len = body.basic_blocks.len();
         let mut new_block = |source_info: SourceInfo, is_cleanup: bool, target: BasicBlock| {
             let block = BasicBlockData::new(
-                Some(Terminator { source_info, kind: TerminatorKind::Goto { target } }),
+                Some(Terminator {
+                    source_info,
+                    kind: TerminatorKind::Goto { target },
+                    attributes: Vec::new(),
+                }),
                 is_cleanup,
             );
             let idx = cur_len + new_blocks.len();

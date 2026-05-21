@@ -92,6 +92,7 @@ impl<'tcx> MirPatch<'tcx> {
             Some(Terminator {
                 source_info: SourceInfo::outermost(self.body_span),
                 kind: TerminatorKind::UnwindResume,
+                attributes: Vec::new(),
             }),
             true,
         ));
@@ -108,6 +109,7 @@ impl<'tcx> MirPatch<'tcx> {
             Some(Terminator {
                 source_info: SourceInfo::outermost(self.body_span),
                 kind: TerminatorKind::Unreachable,
+                attributes: Vec::new(),
             }),
             true,
         ));
@@ -124,6 +126,7 @@ impl<'tcx> MirPatch<'tcx> {
             Some(Terminator {
                 source_info: SourceInfo::outermost(self.body_span),
                 kind: TerminatorKind::Unreachable,
+                attributes: Vec::new(),
             }),
             false,
         ));
@@ -142,6 +145,7 @@ impl<'tcx> MirPatch<'tcx> {
             Some(Terminator {
                 source_info: SourceInfo::outermost(self.body_span),
                 kind: TerminatorKind::UnwindTerminate(reason),
+                attributes: Vec::new(),
             }),
             true,
         ));

@@ -57,6 +57,25 @@ impl<'tcx> ThirBuildCx<'tcx> {
 
         trace!(?expr.ty);
 
+        let mut attrs = Vec::new();
+
+        if let ExprKind::Loop { .. } = expr.kind {
+            // For loops defined with loop and while, the expr already has the attrs
+            if let rustc_hir::Node::Block(_) = self.tcx.parent_hir_node(hir_expr.hir_id) {
+                attrs = rustc_hir::attrs::HasAttrs::get_attrs(hir_expr.hir_id, &self.tcx).to_vec();
+            }
+
+            // For loop desugaring puts us pretty deep down the HIR tree
+            if let rustc_hir::Node::Arm(arm) = self.tcx.parent_hir_node(hir_expr.hir_id) {
+                if let rustc_hir::Node::Expr(expr) = self.tcx.parent_hir_node(arm.hir_id) {
+                    if let rustc_hir::Node::Expr(expr) = self.tcx.parent_hir_node(expr.hir_id) {
+                        attrs =
+                            rustc_hir::attrs::HasAttrs::get_attrs(expr.hir_id, &self.tcx).to_vec();
+                    }
+                }
+            }
+        }
+
         // Now apply adjustments, if any.
         if self.apply_adjustments {
             for adjustment in self.typeck_results.expr_adjustments(hir_expr) {
@@ -68,16 +87,19 @@ impl<'tcx> ThirBuildCx<'tcx> {
 
         trace!(?expr.ty, "after adjustments");
 
+        let ty = expr.ty;
+        let value = self.thir.exprs.push(expr);
+
+        if !attrs.is_empty() {
+            self.thir.attributes.insert(value, attrs);
+        }
+
         // Finally, wrap this up in the expr's scope.
         expr = Expr {
             temp_scope_id: expr_scope.local_id,
-            ty: expr.ty,
+            ty,
             span: hir_expr.span,
-            kind: ExprKind::Scope {
-                region_scope: expr_scope,
-                value: self.thir.exprs.push(expr),
-                hir_id: hir_expr.hir_id,
-            },
+            kind: ExprKind::Scope { region_scope: expr_scope, value, hir_id: hir_expr.hir_id },
         };
 
         // OK, all done!

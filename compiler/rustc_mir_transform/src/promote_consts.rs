@@ -742,6 +742,7 @@ impl<'a, 'tcx> Promoter<'a, 'tcx> {
             Some(Terminator {
                 source_info: SourceInfo::outermost(span),
                 kind: TerminatorKind::Return,
+                attributes: Vec::new(),
             }),
             false,
         ))
@@ -830,6 +831,7 @@ impl<'a, 'tcx> Promoter<'a, 'tcx> {
                 Terminator {
                     source_info: terminator.source_info,
                     kind: mem::replace(&mut terminator.kind, TerminatorKind::Goto { target }),
+                    attributes: Vec::new(),
                 }
             };
 

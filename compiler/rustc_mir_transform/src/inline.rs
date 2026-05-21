@@ -884,6 +884,7 @@ fn inline_call<'tcx, I: Inliner<'tcx>>(
             Some(Terminator {
                 source_info: terminator.source_info,
                 kind: TerminatorKind::Goto { target: block },
+                attributes: Vec::new(),
             }),
             caller_body[block].is_cleanup,
         );
@@ -1022,6 +1023,7 @@ fn inline_call<'tcx, I: Inliner<'tcx>>(
     caller_body[callsite.block].terminator = Some(Terminator {
         source_info: callsite.source_info,
         kind: TerminatorKind::Goto { target: integrator.map_block(START_BLOCK) },
+        attributes: Vec::new(),
     });
 
     // Copy required constants from the callee_body into the caller_body. Although we are only

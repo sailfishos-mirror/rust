@@ -4,7 +4,7 @@ use std::slice;
 
 use rustc_ast::InlineAsmOptions;
 use rustc_data_structures::packed::Pu128;
-use rustc_hir::LangItem;
+use rustc_hir::{Attribute, LangItem};
 use rustc_macros::{StableHash, TyDecodable, TyEncodable, TypeFoldable, TypeVisitable};
 use smallvec::{SmallVec, smallvec};
 
@@ -413,6 +413,7 @@ impl<O: fmt::Debug> fmt::Display for AssertKind<O> {
 pub struct Terminator<'tcx> {
     pub source_info: SourceInfo,
     pub kind: TerminatorKind<'tcx>,
+    pub attributes: Vec<Attribute>,
 }
 
 impl<'tcx> Terminator<'tcx> {
