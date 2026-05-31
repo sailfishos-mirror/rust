@@ -488,5 +488,8 @@ pub(crate) const ALL_TARGETS: &'static [Policy] = {
             kind: rustc_hir::target::GenericParamKind::Type,
             has_default: true,
         }),
+        Allow(Target::Loop),
+        Allow(Target::ForLoop),
+        Allow(Target::While),
     ]
 };

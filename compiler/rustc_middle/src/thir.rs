@@ -15,9 +15,10 @@ use std::sync::Arc;
 
 use rustc_abi::{FieldIdx, Integer, Size, VariantIdx};
 use rustc_ast::{AsmMacro, InlineAsmOptions, InlineAsmTemplatePiece, Mutability};
+use rustc_data_structures::fx::FxIndexMap;
 use rustc_hir as hir;
 use rustc_hir::def_id::DefId;
-use rustc_hir::{BindingMode, ByRef, HirId, MatchSource, RangeEnd};
+use rustc_hir::{Attribute, BindingMode, ByRef, HirId, MatchSource, RangeEnd};
 use rustc_index::{IndexVec, newtype_index};
 use rustc_macros::{StableHash, TyDecodable, TyEncodable, TypeVisitable};
 use rustc_span::def_id::LocalDefId;
@@ -59,6 +60,7 @@ macro_rules! thir_with_elements {
         #[derive(Debug, StableHash, Clone)]
         pub struct Thir<'tcx> {
             pub body_type: BodyTy<'tcx>,
+            pub attributes: FxIndexMap<ExprId, Vec<Attribute>>,
             $(
                 pub $name: IndexVec<$id, $value>,
             )*
@@ -68,6 +70,7 @@ macro_rules! thir_with_elements {
             pub fn new(body_type: BodyTy<'tcx>) -> Thir<'tcx> {
                 Thir {
                     body_type,
+                    attributes: FxIndexMap::default(),
                     $(
                         $name: IndexVec::new(),
                     )*

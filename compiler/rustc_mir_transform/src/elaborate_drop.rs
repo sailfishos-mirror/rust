@@ -1,6 +1,7 @@
 use std::{fmt, iter, mem};
 
 use rustc_abi::{FIRST_VARIANT, FieldIdx, VariantIdx};
+use rustc_data_structures::thin_vec::ThinVec;
 use rustc_hir::def::DefKind;
 use rustc_hir::lang_items::LangItem;
 use rustc_index::Idx;
@@ -1387,7 +1388,7 @@ where
     #[instrument(level = "trace", skip(self), ret)]
     fn new_block(&mut self, unwind: Unwind, k: TerminatorKind<'tcx>) -> BasicBlock {
         self.elaborator.patch().new_block(BasicBlockData::new(
-            Some(Terminator { source_info: self.source_info, kind: k }),
+            Some(Terminator { source_info: self.source_info, kind: k, attributes: ThinVec::new() }),
             unwind.is_cleanup(),
         ))
     }
@@ -1401,7 +1402,7 @@ where
     ) -> BasicBlock {
         self.elaborator.patch().new_block(BasicBlockData::new_stmts(
             statements,
-            Some(Terminator { source_info: self.source_info, kind: k }),
+            Some(Terminator { source_info: self.source_info, kind: k, attributes: ThinVec::new() }),
             unwind.is_cleanup(),
         ))
     }

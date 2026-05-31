@@ -401,6 +401,8 @@ pub static BUILTIN_ATTRIBUTES: &[BuiltinAttribute] = &[
     // - https://github.com/rust-lang/rust/issues/130494
     gated!(pin_v2, pin_ergonomics, experimental!(pin_v2)),
 
+    gated!(unroll, loop_hints, experimental!(loop_hints)),
+
     // ==========================================================================
     // Internal attributes: Stability, deprecation, and unsafe:
     // ==========================================================================

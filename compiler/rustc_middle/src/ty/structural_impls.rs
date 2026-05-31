@@ -241,6 +241,7 @@ TrivialTypeTraversalImpls! {
     rustc_abi::VariantIdx,
     rustc_ast::InlineAsmOptions,
     rustc_ast::InlineAsmTemplatePiece,
+    rustc_hir::Attribute,
     rustc_hir::CoroutineKind,
     rustc_hir::HirId,
     rustc_hir::MatchSource,
