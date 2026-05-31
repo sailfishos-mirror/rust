@@ -66,13 +66,11 @@ impl<'tcx> ThirBuildCx<'tcx> {
             }
 
             // For loop desugaring puts us pretty deep down the HIR tree
-            if let rustc_hir::Node::Arm(arm) = self.tcx.parent_hir_node(hir_expr.hir_id) {
-                if let rustc_hir::Node::Expr(expr) = self.tcx.parent_hir_node(arm.hir_id) {
-                    if let rustc_hir::Node::Expr(expr) = self.tcx.parent_hir_node(expr.hir_id) {
-                        attrs =
-                            rustc_hir::attrs::HasAttrs::get_attrs(expr.hir_id, &self.tcx).to_vec();
-                    }
-                }
+            if let rustc_hir::Node::Arm(arm) = self.tcx.parent_hir_node(hir_expr.hir_id)
+                && let rustc_hir::Node::Expr(expr) = self.tcx.parent_hir_node(arm.hir_id)
+                && let rustc_hir::Node::Expr(expr) = self.tcx.parent_hir_node(expr.hir_id)
+            {
+                attrs = rustc_hir::attrs::HasAttrs::get_attrs(expr.hir_id, &self.tcx).to_vec();
             }
         }
 

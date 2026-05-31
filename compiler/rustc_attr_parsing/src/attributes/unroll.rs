@@ -23,17 +23,14 @@ impl SingleAttributeParser for UnrollParser {
             ArgParser::List(list) => {
                 let l = cx.expect_single(list)?;
 
-                if let Some(lit) = l.as_lit() {
-                    if let LitKind::Int(val, LitIntType::Unsuffixed) = lit.kind {
-                        let Ok(val) = u32::try_from(val.get()) else {
-                            cx.adcx().expected_integer_literal_in_range(
-                                l.span(),
-                                0,
-                                u32::MAX as isize,
-                            );
-                            return None;
-                        };
+                if let Some(lit) = l.as_lit()
+                    && let LitKind::Int(val, LitIntType::Unsuffixed) = lit.kind
+                {
+                    if let Ok(val) = u32::try_from(val.get()) {
                         return Some(AttributeKind::Unroll(UnrollAttr::Count(val)));
+                    } else {
+                        cx.adcx().expected_integer_literal_in_range(l.span(), 0, u32::MAX as isize);
+                        return None;
                     }
                 }
 

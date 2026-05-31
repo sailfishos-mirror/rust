@@ -345,30 +345,31 @@ impl<'a, 'll, 'tcx> BuilderMethods<'a, 'tcx> for Builder<'a, 'll, 'tcx> {
             let mut nodes = Vec::new();
 
             for attribute in attributes {
-                if let Attribute::Parsed(AttributeKind::Unroll(unroll)) = attribute {
-                    // UnrollAttr::Count needs a second operand, the provided count, but the other
-                    // unroll hints do not.
-                    let md_node = if let UnrollAttr::Count(count) = unroll {
-                        let unroll_meta = self.create_metadata("llvm.loop.unroll.count".as_bytes());
-                        let count =
-                            llvm::LLVMValueAsMetadata(self.get_const_i32(u64::from(*count)));
-                        self.md_node_in_context(&[unroll_meta, count])
-                    } else {
-                        let metadata_str = match unroll {
-                            UnrollAttr::Hint => "llvm.loop.unroll.enable",
-                            UnrollAttr::Full => "llvm.loop.unroll.full",
-                            UnrollAttr::Never => "llvm.loop.unroll.disable",
-                            _ => unreachable!(),
-                        };
-                        let unroll_meta = self.create_metadata(metadata_str.as_bytes());
-                        self.md_node_in_context(&[unroll_meta])
+                let Attribute::Parsed(AttributeKind::Unroll(unroll)) = attribute else {
+                    continue;
+                };
+                // UnrollAttr::Count needs a second operand, the provided count, but the other
+                // unroll hints do not.
+                let md_node = if let UnrollAttr::Count(count) = unroll {
+                    let unroll_meta = self.create_metadata("llvm.loop.unroll.count".as_bytes());
+                    let count = llvm::LLVMValueAsMetadata(self.get_const_i32(u64::from(*count)));
+                    self.md_node_in_context(&[unroll_meta, count])
+                } else {
+                    let metadata_str = match unroll {
+                        UnrollAttr::Hint => "llvm.loop.unroll.enable",
+                        UnrollAttr::Full => "llvm.loop.unroll.full",
+                        UnrollAttr::Never => "llvm.loop.unroll.disable",
+                        UnrollAttr::Count(_) => unreachable!(),
                     };
-                    nodes.push(md_node);
-                }
+                    let unroll_meta = self.create_metadata(metadata_str.as_bytes());
+                    self.md_node_in_context(&[unroll_meta])
+                };
+                nodes.push(md_node);
             }
 
-            if nodes.len() > 0 {
-                nodes.insert(0, nodes[0]);
+            if let [first, ..] = nodes[..] {
+                nodes.insert(0, first);
+
                 // Create the loop metadata node
                 let loop_meta_mdnode = self.set_metadata_node(val, llvm::MD_loop, &nodes);
 
