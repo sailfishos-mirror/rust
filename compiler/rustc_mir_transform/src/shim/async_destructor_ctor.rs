@@ -83,7 +83,7 @@ pub(super) fn build_async_drop_shim<'tcx>(
     let mut blocks = IndexVec::with_capacity(2);
     let block = |blocks: &mut IndexVec<_, _>, kind| {
         blocks.push(BasicBlockData::new(
-            Some(Terminator { source_info, kind, attributes: Vec::new() }),
+            Some(Terminator { source_info, kind, attributes: ThinVec::new() }),
             false,
         ))
     };
@@ -378,7 +378,7 @@ fn build_adrop_for_adrop_shim<'tcx>(
                 fn_span: span,
             },
 
-            attributes: Vec::new(),
+            attributes: ThinVec::new(),
         }),
         false,
     ));
@@ -403,12 +403,12 @@ fn build_adrop_for_adrop_shim<'tcx>(
                 fn_span: span,
             },
 
-            attributes: Vec::new(),
+            attributes: ThinVec::new(),
         }),
         false,
     ));
     blocks.push(BasicBlockData::new(
-        Some(Terminator { source_info, kind: TerminatorKind::Return, attributes: Vec::new() }),
+        Some(Terminator { source_info, kind: TerminatorKind::Return, attributes: ThinVec::new() }),
         false,
     ));
 

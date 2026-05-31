@@ -1,4 +1,5 @@
 use rustc_data_structures::fx::FxHashMap;
+use rustc_data_structures::thin_vec::ThinVec;
 use rustc_index::Idx;
 use rustc_middle::mir::*;
 use rustc_middle::ty::Ty;
@@ -92,7 +93,7 @@ impl<'tcx> MirPatch<'tcx> {
             Some(Terminator {
                 source_info: SourceInfo::outermost(self.body_span),
                 kind: TerminatorKind::UnwindResume,
-                attributes: Vec::new(),
+                attributes: ThinVec::new(),
             }),
             true,
         ));
@@ -109,7 +110,7 @@ impl<'tcx> MirPatch<'tcx> {
             Some(Terminator {
                 source_info: SourceInfo::outermost(self.body_span),
                 kind: TerminatorKind::Unreachable,
-                attributes: Vec::new(),
+                attributes: ThinVec::new(),
             }),
             true,
         ));
@@ -126,7 +127,7 @@ impl<'tcx> MirPatch<'tcx> {
             Some(Terminator {
                 source_info: SourceInfo::outermost(self.body_span),
                 kind: TerminatorKind::Unreachable,
-                attributes: Vec::new(),
+                attributes: ThinVec::new(),
             }),
             false,
         ));
@@ -145,7 +146,7 @@ impl<'tcx> MirPatch<'tcx> {
             Some(Terminator {
                 source_info: SourceInfo::outermost(self.body_span),
                 kind: TerminatorKind::UnwindTerminate(reason),
-                attributes: Vec::new(),
+                attributes: ThinVec::new(),
             }),
             true,
         ));

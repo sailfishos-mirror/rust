@@ -4,6 +4,7 @@ use std::ops::{Range, RangeFrom};
 use std::{debug_assert_matches, iter};
 
 use rustc_abi::{ExternAbi, FieldIdx};
+use rustc_data_structures::thin_vec::ThinVec;
 use rustc_hir::attrs::{InlineAttr, OptimizeAttr};
 use rustc_hir::def::DefKind;
 use rustc_hir::def_id::DefId;
@@ -884,7 +885,7 @@ fn inline_call<'tcx, I: Inliner<'tcx>>(
             Some(Terminator {
                 source_info: terminator.source_info,
                 kind: TerminatorKind::Goto { target: block },
-                attributes: Vec::new(),
+                attributes: ThinVec::new(),
             }),
             caller_body[block].is_cleanup,
         );
@@ -1023,7 +1024,7 @@ fn inline_call<'tcx, I: Inliner<'tcx>>(
     caller_body[callsite.block].terminator = Some(Terminator {
         source_info: callsite.source_info,
         kind: TerminatorKind::Goto { target: integrator.map_block(START_BLOCK) },
-        attributes: Vec::new(),
+        attributes: ThinVec::new(),
     });
 
     // Copy required constants from the callee_body into the caller_body. Although we are only

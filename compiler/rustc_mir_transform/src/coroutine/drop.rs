@@ -115,7 +115,7 @@ fn build_pin_fut<'tcx>(
                 call_source: CallSource::Misc,
                 fn_span: span,
             },
-            attributes: Vec::new(),
+            attributes: ThinVec::new(),
         }),
         false,
     ));
@@ -175,7 +175,7 @@ fn build_poll_switch<'tcx>(
                     unreachable_block,
                 ),
             },
-            attributes: Vec::new(),
+            attributes: ThinVec::new(),
         }),
         false,
     ))
@@ -556,7 +556,7 @@ pub(super) fn insert_clean_drop<'tcx>(
 
     // Create a block to destroy an unresumed coroutines. This can only destroy upvars.
     body.basic_blocks_mut().push(BasicBlockData::new(
-        Some(Terminator { source_info, kind: term, attributes: Vec::new() }),
+        Some(Terminator { source_info, kind: term, attributes: ThinVec::new() }),
         false,
     ))
 }
@@ -754,7 +754,7 @@ pub(super) fn create_coroutine_drop_shim_proxy_async<'tcx>(
         async_fut: None,
     };
     body.basic_blocks_mut()[call_bb].terminator =
-        Some(Terminator { source_info, kind, attributes: Vec::new() });
+        Some(Terminator { source_info, kind, attributes: ThinVec::new() });
 
     if let Some(dumper) = MirDumper::new(tcx, "coroutine_drop_proxy_async", &body) {
         dumper.dump_mir(&body);

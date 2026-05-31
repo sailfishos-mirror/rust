@@ -63,6 +63,7 @@ use drop::{
 use itertools::izip;
 use rustc_abi::{FieldIdx, VariantIdx};
 use rustc_data_structures::fx::FxHashSet;
+use rustc_data_structures::thin_vec::ThinVec;
 use rustc_errors::pluralize;
 use rustc_hir::lang_items::LangItem;
 use rustc_hir::{self as hir, CoroutineDesugaring, CoroutineKind, find_attr};
@@ -261,7 +262,11 @@ impl<'tcx> TransformVisitor<'tcx> {
 
         body.basic_blocks_mut().push(BasicBlockData::new_stmts(
             statements,
-            Some(Terminator { source_info, kind: TerminatorKind::Return, attributes: Vec::new() }),
+            Some(Terminator {
+                source_info,
+                kind: TerminatorKind::Return,
+                attributes: ThinVec::new(),
+            }),
             false,
         ));
 
@@ -633,7 +638,7 @@ fn eliminate_get_context_call<'tcx>(bb_data: &mut BasicBlockData<'tcx>) -> Local
     bb_data.terminator = Some(Terminator {
         source_info: terminator.source_info,
         kind: TerminatorKind::Goto { target: target.unwrap() },
-        attributes: Vec::new(),
+        attributes: ThinVec::new(),
     });
     local
 }
@@ -1115,14 +1120,14 @@ fn insert_switch<'tcx>(
     body.basic_blocks_mut()[START_BLOCK].terminator = Some(Terminator {
         source_info: SourceInfo::outermost(body.span),
         kind: switch,
-        attributes: Vec::new(),
+        attributes: ThinVec::new(),
     });
 }
 
 fn insert_term_block<'tcx>(body: &mut Body<'tcx>, kind: TerminatorKind<'tcx>) -> BasicBlock {
     let source_info = SourceInfo::outermost(body.span);
     body.basic_blocks_mut().push(BasicBlockData::new(
-        Some(Terminator { source_info, kind, attributes: Vec::new() }),
+        Some(Terminator { source_info, kind, attributes: ThinVec::new() }),
         false,
     ))
 }
@@ -1147,7 +1152,7 @@ fn insert_poll_ready_block<'tcx>(tcx: TyCtxt<'tcx>, body: &mut Body<'tcx>) -> Ba
     let source_info = SourceInfo::outermost(body.span);
     body.basic_blocks_mut().push(BasicBlockData::new_stmts(
         [return_poll_ready_assign(tcx, source_info)].to_vec(),
-        Some(Terminator { source_info, kind: TerminatorKind::Return, attributes: Vec::new() }),
+        Some(Terminator { source_info, kind: TerminatorKind::Return, attributes: ThinVec::new() }),
         false,
     ))
 }
@@ -1206,7 +1211,7 @@ fn generate_poison_block_and_redirect_unwinds_there<'tcx>(
             source_info,
             kind: TerminatorKind::UnwindResume,
 
-            attributes: Vec::new(),
+            attributes: ThinVec::new(),
         }),
         true,
     ));
@@ -1222,7 +1227,7 @@ fn generate_poison_block_and_redirect_unwinds_there<'tcx>(
                     source_info,
                     kind: TerminatorKind::Goto { target: poison_block },
 
-                    attributes: Vec::new(),
+                    attributes: ThinVec::new(),
                 };
             }
         } else if !block.is_cleanup
@@ -1383,7 +1388,7 @@ fn create_cases<'tcx>(
                         source_info,
                         kind: TerminatorKind::Goto { target },
 
-                        attributes: Vec::new(),
+                        attributes: ThinVec::new(),
                     }),
                     false,
                 ));

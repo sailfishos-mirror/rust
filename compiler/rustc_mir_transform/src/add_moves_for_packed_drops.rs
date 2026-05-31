@@ -1,3 +1,4 @@
+use rustc_data_structures::thin_vec::ThinVec;
 use rustc_middle::mir::*;
 use rustc_middle::ty::{self, TyCtxt};
 use tracing::debug;
@@ -98,7 +99,7 @@ fn add_move_for_packed_drop<'tcx>(
         Some(Terminator {
             source_info,
             kind: TerminatorKind::Goto { target },
-            attributes: Vec::new(),
+            attributes: ThinVec::new(),
         }),
         is_cleanup,
     ));

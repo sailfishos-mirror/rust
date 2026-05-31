@@ -7,6 +7,7 @@ use rustc_data_structures::packed::Pu128;
 use rustc_hir::{Attribute, LangItem};
 use rustc_macros::{StableHash, TyDecodable, TyEncodable, TypeFoldable, TypeVisitable};
 use smallvec::{SmallVec, smallvec};
+use thin_vec::ThinVec;
 
 use super::*;
 
@@ -413,7 +414,7 @@ impl<O: fmt::Debug> fmt::Display for AssertKind<O> {
 pub struct Terminator<'tcx> {
     pub source_info: SourceInfo,
     pub kind: TerminatorKind<'tcx>,
-    pub attributes: Vec<Attribute>,
+    pub attributes: ThinVec<Attribute>,
 }
 
 impl<'tcx> Terminator<'tcx> {
