@@ -11,7 +11,7 @@ unsafe extern "C" {
 pub fn unroll_full() {
     // CHECK-LABEL: @unroll_full
     // CHECK-COUNT-512: tail call void @maybe_has_side_effect()
-    #[unroll(always)]
+    #[unroll(full)]
     for _ in 0..512 {
         unsafe { maybe_has_side_effect() }
     }

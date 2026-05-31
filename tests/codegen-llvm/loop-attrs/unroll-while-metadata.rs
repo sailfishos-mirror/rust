@@ -28,7 +28,7 @@ pub fn unroll_full() {
     // CHECK-LABEL: @unroll_full
     // CHECK: !llvm.loop ![[FULL:[0-9]+]]
     let mut i = 0;
-    #[unroll(always)]
+    #[unroll(full)]
     while i < 10 {
         unsafe { maybe_has_side_effect() }
         i += 1;

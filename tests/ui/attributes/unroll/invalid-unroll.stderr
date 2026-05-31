@@ -4,9 +4,7 @@ error[E0539]: malformed `unroll` attribute input
 LL |     #[unroll(please)]
    |     ^^^^^^^^^------^^
    |              |
-   |              valid arguments are `always` or `never`
-   |
-   = note: for more information, visit <https://doc.rust-lang.org/reference/attributes/codegen.html#the-inline-attribute>
+   |              valid arguments are `full` or `never`
 
 error[E0539]: malformed `unroll` attribute input
   --> $DIR/invalid-unroll.rs:8:5
@@ -14,9 +12,7 @@ error[E0539]: malformed `unroll` attribute input
 LL |     #[unroll("never")]
    |     ^^^^^^^^^-------^^
    |              |
-   |              valid arguments are `always` or `never`
-   |
-   = note: for more information, visit <https://doc.rust-lang.org/reference/attributes/codegen.html#the-inline-attribute>
+   |              valid arguments are `full` or `never`
 
 error[E0805]: malformed `unroll` attribute input
   --> $DIR/invalid-unroll.rs:11:5
@@ -25,8 +21,6 @@ LL |     #[unroll()]
    |     ^^^^^^^^--^
    |             |
    |             expected an argument here
-   |
-   = note: for more information, visit <https://doc.rust-lang.org/reference/attributes/codegen.html#the-inline-attribute>
 
 error: expected a literal (`1u8`, `1.0f32`, `"string"`, etc.) here, found expression
   --> $DIR/invalid-unroll.rs:14:14
@@ -46,9 +40,7 @@ error[E0539]: malformed `unroll` attribute input
 LL |     #[unroll(1.5)]
    |     ^^^^^^^^^---^^
    |              |
-   |              valid arguments are `always` or `never`
-   |
-   = note: for more information, visit <https://doc.rust-lang.org/reference/attributes/codegen.html#the-inline-attribute>
+   |              valid arguments are `full` or `never`
 
 error: aborting due to 5 previous errors
 
