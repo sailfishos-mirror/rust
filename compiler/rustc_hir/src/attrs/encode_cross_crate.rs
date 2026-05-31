@@ -197,6 +197,7 @@ impl AttributeKind {
             ThreadLocal => No,
             TrackCaller(..) => Yes,
             TypeLengthLimit { .. } => No,
+            Unroll(..) => No,
             UnstableFeatureBound(..) => No,
             UnstableRemoved(..) => Yes,
             Used { .. } => No,
