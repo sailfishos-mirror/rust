@@ -38,13 +38,10 @@ rustc_arena::declare_arena! {
         >,
     resolver: rustc_data_structures::steal::Steal<rustc_middle::ty::ResolverAstLowering<'tcx>>,
     index_ast:
-        rustc_index::IndexVec<
-            rustc_span::def_id::LocalDefId,
-            rustc_data_structures::steal::Steal<(
-                std::sync::Arc<rustc_middle::ty::ResolverAstLowering<'tcx>>,
-                rustc_ast::AstOwner
-            )>
-        >,
+        rustc_data_structures::steal::Steal<(
+            std::sync::Arc<rustc_middle::ty::ResolverAstLowering<'tcx>>,
+            rustc_ast::AstOwner
+        )>,
     crate_alone: rustc_data_structures::steal::Steal<rustc_ast::Crate>,
     crate_for_resolver: rustc_data_structures::steal::Steal<(rustc_ast::Crate, rustc_ast::AttrVec)>,
     resolutions: rustc_middle::ty::ResolverGlobalCtxt,
