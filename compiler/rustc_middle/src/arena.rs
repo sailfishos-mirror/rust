@@ -38,13 +38,10 @@ rustc_arena::declare_arena! {
         >,
     resolver: rustc_data_structures::steal::Steal<rustc_middle::ty::ResolverAstLowering<'tcx>>,
     index_ast:
-        rustc_index::IndexVec<
-            rustc_span::def_id::LocalDefId,
-            rustc_data_structures::steal::Steal<(
-                std::sync::Arc<rustc_middle::ty::ResolverAstLowering<'tcx>>,
-                rustc_ast::AstOwner
-            )>
-        >,
+        rustc_data_structures::steal::Steal<(
+            std::sync::Arc<rustc_middle::ty::ResolverAstLowering<'tcx>>,
+            rustc_ast::AstOwner
+        )>,
     crate_alone: rustc_data_structures::steal::Steal<rustc_ast::Crate>,
     crate_for_resolver: rustc_data_structures::steal::Steal<(rustc_ast::Crate, rustc_ast::AttrVec)>,
     resolutions: rustc_middle::ty::ResolverGlobalCtxt,
@@ -136,8 +133,6 @@ rustc_arena::declare_arena! {
     crate_inherent_impls: rustc_middle::ty::CrateInherentImpls,
     hir_owner_nodes: rustc_hir::OwnerNodes<'tcx>,
     token_stream: rustc_ast::tokenstream::TokenStream,
-    maybe_owner: rustc_middle::hir::ProjectedMaybeOwner<'tcx>,
-    owner_info: rustc_middle::hir::ProjectedOwnerInfo<'tcx>,
     parenting: rustc_hir::def_id::LocalDefIdMap<rustc_hir::ItemLocalId>,
     trait_candidates: rustc_hir::ItemLocalMap<&'tcx [rustc_hir::TraitCandidate<'tcx>]>,
     delayed_lints: rustc_data_structures::steal::Steal<rustc_hir::lints::DelayedLints>,
