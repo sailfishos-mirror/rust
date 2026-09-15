@@ -326,25 +326,24 @@ struct LoweringContext<'a, 'hir> {
     attribute_parser: AttributeParser<'hir>,
 }
 
-macro_rules! allow {
-    ($($name:ident: $list:expr;)*) => {
-        $( static $name: LazyLock<Arc<[Symbol]>> = LazyLock::new(|| $list.into()); )*
-    }
-}
+type Allow = LazyLock<Arc<[Symbol]>>;
 
-allow! {
-    ALLOW_CONTRACTS: [sym::contracts_internals];
-    ALLOW_TRY_TRAIT: [sym::try_trait_v2, sym::try_trait_v2_residual, sym::yeet_desugar_details];
-    ALLOW_PATTERN_TYPE: [sym::pattern_types, sym::pattern_type_range_trait];
-    ALLOW_GEN_FUTURE: [sym::gen_future];
-    ALLOW_GEN_FUTURE_WITH_ASYNC_FN_TRACK_CALLER: [sym::gen_future, sym::closure_track_caller];
-    ALLOW_FOR_AWAIT: [sym::async_gen_internals, sym::async_iterator];
-    ALLOW_ASYNC_FN_TRAITS: [sym::async_fn_traits];
-    ALLOW_ASYNC_GEN: [sym::async_gen_internals];
-    // FIXME(gen_blocks): how does `closure_track_caller`/`async_fn_track_caller`
-    // interact with `gen`/`async gen` blocks
-    ALLOW_ASYNC_ITERATOR: [sym::gen_future, sym::async_iterator];
-}
+static ALLOW_CONTRACTS: Allow = Allow::new(|| [sym::contracts_internals].into());
+static ALLOW_TRY_TRAIT: Allow = Allow::new(|| {
+    [sym::try_trait_v2, sym::try_trait_v2_residual, sym::yeet_desugar_details].into()
+});
+static ALLOW_PATTERN_TYPE: Allow =
+    Allow::new(|| [sym::pattern_types, sym::pattern_type_range_trait].into());
+static ALLOW_GEN_FUTURE: Allow = Allow::new(|| [sym::gen_future].into());
+static ALLOW_GEN_FUTURE_WITH_ASYNC_FN_TRACK_CALLER: Allow =
+    Allow::new(|| [sym::gen_future, sym::closure_track_caller].into());
+static ALLOW_FOR_AWAIT: Allow =
+    Allow::new(|| [sym::async_gen_internals, sym::async_iterator].into());
+static ALLOW_ASYNC_FN_TRAITS: Allow = Allow::new(|| [sym::async_fn_traits].into());
+static ALLOW_ASYNC_GEN: Allow = Allow::new(|| [sym::async_gen_internals].into());
+// FIXME(gen_blocks): how does `closure_track_caller`/`async_fn_track_caller` interact with
+// `gen`/`async gen` blocks
+static ALLOW_ASYNC_ITERATOR: Allow = Allow::new(|| [sym::gen_future, sym::async_iterator].into());
 
 impl<'a, 'hir> LoweringContext<'a, 'hir> {
     fn new(tcx: TyCtxt<'hir>, resolver: &'a ResolverAstLowering<'hir>, owner: NodeId) -> Self {
